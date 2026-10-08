@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPT Splash</title>
+  <style>
+    :root {
+      --bg1: #0b1020;
+      --bg2: #111827;
+      --panel: rgba(17, 24, 39, 0.82);
+      --glass: rgba(255, 255, 255, 0.08);
+      --cyan: #6ee7ff;
+      --blue: #60a5fa;
+      --purple: #a78bfa;
+      --green: #34d399;
+      --text: #e5eefb;
+      --muted: #9aa9c0;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: transparent;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shell {
+      position: relative;
+      width: 500px;
+      height: 320px;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(110, 231, 255, 0.18), transparent 30%),
+        radial-gradient(circle at 70% 30%, rgba(167, 139, 250, 0.20), transparent 35%),
+        linear-gradient(135deg, rgba(11,16,32,0.96), rgba(17,24,39,0.86));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(4px);
+      opacity: 0.8;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .orb.one {
+      width: 180px;
+      height: 180px;
+      left: -30px;
+      top: -60px;
+      background: radial-gradient(circle, rgba(110, 231, 255, 0.7), rgba(96, 165, 250, 0.1), transparent 70%);
+    }
+
+    .orb.two {
+      width: 220px;
+      height: 220px;
+      right: -60px;
+      bottom: -80px;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.8), rgba(167,139,250,0.08), transparent 70%);
+      animation-delay: 1.2s;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .logo-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-ring {
+      position: absolute;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      border: 1px solid rgba(110, 231, 255, 0.4);
+      box-shadow:
+        0 0 20px rgba(110, 231, 255, 0.25),
+        inset 0 0 20px rgba(110, 231, 255, 0.15);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    .logo-core {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.25), rgba(167, 139, 250, 0.28));
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 30px rgba(96, 165, 250, 0.22);
+    }
+
+    .logo-core::before {
+      content: "";
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      transform: rotate(45deg);
+      box-shadow: 0 0 20px rgba(110, 231, 255, 0.6);
+    }
+
+    .title {
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      color: var(--text);
+      font-weight: 700;
+      text-transform: uppercase;
+      text-shadow: 0 0 18px rgba(110, 231, 255, 0.28);
+      animation: fadeIn 1s ease;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .loading {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      align-items: center;
+    }
+
+    .loading span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, var(--cyan), var(--purple));
+      display: block;
+      animation: bounce 1.2s ease-in-out infinite;
+      opacity: 0.9;
+    }
+
+    .loading span:nth-child(2) { animation-delay: 0.15s; }
+    .loading span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(0.96);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-16px) scale(1.04); }
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.35;
+      }
+      40% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+
+    <div class="content">
+      <div class="logo-wrap">
+        <div class="logo-ring"></div>
+        <div class="logo-core"></div>
+      </div>
+
+      <div class="title">GPT</div>
+
+      <div class="subtitle">Initializing</div>
+
+      <div class="loading" aria-label="加载中">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
